@@ -109,7 +109,9 @@ export const fetchOpenRouterModels = async () => {
         modelName: model.id,
         provider: "openrouter",
         hostedId: model.id,
+        platformLink: "https://api.siokhe.com",
         imageInput: false,
+        maxContext: 200000
       })
     );
 
