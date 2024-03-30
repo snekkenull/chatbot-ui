@@ -710,12 +710,12 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
 
               <div className="space-y-1">
                 {envKeyMap["openrouter"] ? (
-                  <Label>OpenRouter API key set by admin.</Label>
+                  <Label>Provider API key set by admin.</Label>
                 ) : (
                   <>
-                    <Label>OpenRouter API Key</Label>
+                    <Label>Provider API Key</Label>
                     <Input
-                      placeholder="OpenRouter API Key"
+                      placeholder="Provider API Key"
                       type="password"
                       value={openrouterAPIKey}
                       onChange={e => setOpenrouterAPIKey(e.target.value)}

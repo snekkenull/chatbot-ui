@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
     const openai = new OpenAI({
       apiKey: profile.openrouter_api_key || "",
-      baseURL: "https://openrouter.ai/api/v1"
+      baseURL: "https://api.siokhe.com/v1"
     })
 
     const response = await openai.chat.completions.create({
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
 
     if (errorMessage.toLowerCase().includes("api key not found")) {
       errorMessage =
-        "OpenRouter API Key not found. Please set it in your profile settings."
+        "Provider API Key not found. Please set it in your profile settings."
     }
 
     return new Response(JSON.stringify({ message: errorMessage }), {
