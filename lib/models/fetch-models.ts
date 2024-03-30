@@ -4,7 +4,7 @@ import { toast } from "sonner"
 import { LLM_LIST_MAP } from "./llm/llm-list"
 
 import { OpenAI } from "openai";
-import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
+
 
 export const fetchHostedModels = async (profile: Tables<"profiles">) => {
   try {
@@ -82,25 +82,31 @@ export const fetchOllamaModels = async () => {
   }
 }
 
-export const fetchOpenRouterModels = async (apiKey: string) => {
+export const fetchOpenRouterModels = async () => {
   try {
-    const profile = await getServerProfile()
+    const providerKey = process.env.NEXT_PUBLIC_LITELLM_API_KEY
 
-    checkApiKey(profile.openrouter_api_key, "OpenRouter")
+    if (!providerKey) {
+      throw new Error("Provider API key is missing.")
+    }
 
-    const openai = new OpenAI({
-      apiKey: profile.openrouter_api_key || "",
-      baseURL: "https://api.siokhe.com/v1"
-    })
+    const response = await fetch("https://api.siokhe.com/v1/models", {
+      headers: {
+        Authorization: `Bearer ${providerKey}`
+      },
+    });
 
-    const list = await openai.models.list()
+    if (!response.ok) {
+      throw new Error(`Provider server is not responding.`)
+    }
 
-    const openRouterModels = list.map(
+    const { data } = await response.json()
+
+    const openRouterModels = data.map(
       (model: {
         id: string
-        created: number
-        object: string
-        owned_by: string
+        name: string
+        owned_by: number
       }): OpenRouterLLM => ({
         modelId: model.id as LLMID,
         modelName: model.id,
@@ -108,13 +114,13 @@ export const fetchOpenRouterModels = async (apiKey: string) => {
         hostedId: model.id,
         platformLink: "https://api.siokhe.com",
         imageInput: false,
-        maxContext: 200000,
+        maxContext: 200000
       })
     );
 
     return openRouterModels;
   } catch (error) {
-    console.error("Error fetching Open Router models: " + error);
-    toast.error("Error fetching Open Router models: " + error);
+    console.error("Error fetching Open Router models: " + error)
+    toast.error("Error fetching Open Router models: " + error)
   }
 }
