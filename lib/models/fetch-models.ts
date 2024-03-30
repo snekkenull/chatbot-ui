@@ -81,29 +81,29 @@ export const fetchOllamaModels = async () => {
 
 export const fetchOpenRouterModels = async () => {
   try {
-    const providerKey = process.env.OPENROUTER_API_KEY;
+    const providerKey = process.env.OPENROUTER_API_KEY
 
     if (!providerKey) {
-      throw new Error("Provider API key is missing.");
+      throw new Error("Provider API key is missing.")
     }
 
-    const response = await fetch("https://api.siokhe.com/api/v1/models", {
+    const response = await fetch("https://api.siokhe.com/v1/models", {
       headers: {
-        Authorization: `Bearer ${providerKey}`,
+        Authorization: `Bearer ${providerKey}`
       },
     });
 
     if (!response.ok) {
-      throw new Error(`Provider server is not responding.`);
+      throw new Error(`Provider server is not responding.`)
     }
 
-    const { data } = await response.json();
+    const { data } = await response.json()
 
     const openRouterModels = data.map(
       (model: {
-        id: string;
-        name: string;
-        owned_by: number;
+        id: string
+        name: string
+        owned_by: number
       }): OpenRouterLLM => ({
         modelId: model.id as LLMID,
         modelName: model.id,
@@ -117,7 +117,7 @@ export const fetchOpenRouterModels = async () => {
 
     return openRouterModels;
   } catch (error) {
-    console.error("Error fetching Open Router models: " + error);
-    toast.error("Error fetching Open Router models: " + error);
+    console.error("Error fetching Open Router models: " + error)
+    toast.error("Error fetching Open Router models: " + error)
   }
 }
